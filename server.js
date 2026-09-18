@@ -81,17 +81,17 @@ const initialMessage = (ingredientList) => {
 // - 프론트엔드에서 사용자가 재료를 처음 입력하고 제출했을 때 호출됨
 // ============================================================
 app.post("/recipe", async (req, res) => {
-  // 요청 본문에서 재료 목록 꺼내기
-  const { ingredientList } = req.body;
+  // 요청 본문에서 재료 목록 꺼내기, 구조분해 할당
+  const { ingredientList } = req.body;  //재료 목록
 
-  // 재료 목록을 기반으로 system + user 메시지 배열 생성
+  // openai에게 보낼 메세지 배열, 재료 목록을 기반으로 system + user 메시지 배열 생성
   const messages = initialMessage(ingredientList);
 
   try {
     // OpenAI Chat Completions API 호출
     const response = await openai.chat.completions.create({
       model: "gpt-4o",        // 사용할 모델
-      messages,                // 위에서 만든 [system, user] 메시지
+      messages,                // 위에서 만든 [system, user] 메시지 key, valus 가 동일하면 축약할 수 있음
       temperature: 1,          // 응답의 창의성/무작위성 정도 (0~2, 높을수록 다양한 응답)
       max_tokens: 4000,        // 응답 최대 토큰 수
       top_p: 1,                // nucleus sampling 확률 (temperature와 함께 응답 다양성 조절)
@@ -114,8 +114,9 @@ app.post("/recipe", async (req, res) => {
   }
 });
 
+// 유저와의 
 // ============================================================
-// [POST] /message : 대화를 이어가는 지점 (두 번째 요청부터)
+// [POST] /message : 대화를 이어가는 지점 (두 번째 요청부터) 유저와의 채팅
 // - 프론트엔드가 지금까지의 messages 배열 전체 + 새 사용자 메시지를 함께 전송
 // ============================================================
 app.post("/message", async (req, res) => {
