@@ -7,10 +7,16 @@ import OpenAI from "openai";
 const app = express();
 
 //환경변수 로드(key 값을 가져오기 때문에 )
-dotenv.config()
+dotenv.config();
 
-//cors 설정
-app.use(cors())
+// CORS 설정
+const corsOption = {
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"], // 응답헤더 설정
+};
+
+app.use(cors(corsOption));
 
 // Json 설정
 // 프론트엔드에서 받은 Json형태의 데이터를 자바스크립트 객체로 파싱(변환)하여 사용
